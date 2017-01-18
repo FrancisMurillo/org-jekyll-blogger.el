@@ -890,8 +890,7 @@
          project
          blog
          file-type
-         current-file
-         (org-jekyll-blogger-blogs))))))
+         current-file)))))
 
 (defun org-jekyll-blogger--change-check ()
   "A timer function to change directory."
