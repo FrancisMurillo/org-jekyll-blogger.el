@@ -133,9 +133,9 @@
   (cl-reduce
    (lambda (item acc)
      (if (and (symbolp item)
-              (equal
-               (substring-no-properties (symbol-name item) 0 1)
-               ":"))
+            (equal
+             (substring-no-properties (symbol-name item) 0 1)
+             ":"))
          (cons item acc)
        acc))
    plist
@@ -147,7 +147,7 @@
   (mapcar
    (lambda (key)
      (cons key
-           (plist-get plist key)))
+        (plist-get plist key)))
    (org-jekyll-blogger--plist-keys plist)))
 
 (defun org-jekyll-blogger--plist-merge (&rest plists)
@@ -250,13 +250,13 @@
 (defun* org-jekyll-blogger-define-project (project-name &key project-root publish-root post-headers post-options)
   "Define a jekyll project specialed with an org project mindset."
   (lexical-let ((project
-                 (list
-                  :project-name project-name
-                  :project-root (expand-file-name project-root)
-                  :publish-root (expand-file-name publish-root)
+       (list
+        :project-name project-name
+        :project-root (expand-file-name project-root)
+        :publish-root (expand-file-name publish-root)
 
-                  :post-headers (or post-headers org-jekyll-blogger-default-post-headers)
-                  :post-options (or post-options org-jekyll-blogger-default-post-options))))
+        :post-headers (or post-headers org-jekyll-blogger-default-post-headers)
+        :post-options (or post-options org-jekyll-blogger-default-post-options))))
     (org-jekyll-blogger--setup-project-structure project)
     (org-jekyll-blogger--update-tables-by-project project)
     (org-jekyll-blogger--make-org-project project)
@@ -272,9 +272,9 @@
 (defun org-jekyll-blogger--setup-project-structure (project)
   "Setup PROJECT structure."
   (lexical-let ((project-root
-                 (plist-get project :project-root))
-                (publish-root
-                 (plist-get project :publish-root)))
+       (plist-get project :project-root))
+      (publish-root
+       (plist-get project :publish-root)))
     (make-directory project-root t)
     (make-directory publish-root t)
 
@@ -284,7 +284,7 @@
 (defun org-jekyll-blogger--update-tables-by-project (project)
   "Update `org-jekyll-blogger--blogs' and `org-jekyll-blogger--projects' by PROJECT."
   (lexical-let ((project-name
-                 (plist-get project :project-name)))
+       (plist-get project :project-name)))
     ;; Update project list
     (puthash
      project-name
@@ -304,51 +304,51 @@
   "Make `org-publish' recognize PROJECT."
   (lexical-let ((project-name (org-jekyll-blogger--project-command project)))
     (setq org-publish-project-alist
-          (remove
-           (assoc project-name org-publish-project-alist)
-           org-publish-project-alist))
+       (remove
+        (assoc project-name org-publish-project-alist)
+        org-publish-project-alist))
 
     (add-to-list
      'org-publish-project-alist
      (list project-name
-           :components (list)))))
+        :components (list)))))
 
 
 ;; Blog
 (defun* org-jekyll-blogger-define-blog (blog-name &key project blog-root blog-publish-root post-headers post-options)
   "Define a jekyll blog."
   (lexical-let* ((project-root (plist-get project :project-root))
-                 (project-name (plist-get project :project-name))
-                 (publish-root (plist-get project :publish-root))
+      (project-name (plist-get project :project-name))
+      (publish-root (plist-get project :publish-root))
 
-                 (new-blog)
-                 (blog
-                  (list
-                   :blog-name (or blog-name "PRIMARY")
-                   :blog-root
-                   (if blog-root
-                       blog-root
-                     (expand-file-name
-                      (or blog-name ".")
-                      project-root))
-                   :blog-publish-root
-                   (if blog-publish-root
-                       blog-publish-root
-                     (expand-file-name
-                      (or blog-name ".")
-                      publish-root))
+      (new-blog)
+      (blog
+       (list
+        :blog-name (or blog-name "PRIMARY")
+        :blog-root
+        (if blog-root
+            blog-root
+          (expand-file-name
+           (or blog-name ".")
+           project-root))
+        :blog-publish-root
+        (if blog-publish-root
+            blog-publish-root
+          (expand-file-name
+           (or blog-name ".")
+           publish-root))
 
-                   :project-name project-name
+        :project-name project-name
 
-                   :post-headers
-                   (org-jekyll-blogger--plist-merge
-                    (plist-get project :post-headers)
-                    post-headers)
+        :post-headers
+        (org-jekyll-blogger--plist-merge
+         (plist-get project :post-headers)
+         post-headers)
 
-                   :post-options
-                   (org-jekyll-blogger--plist-merge
-                    (plist-get project :post-options)
-                    post-options))))
+        :post-options
+        (org-jekyll-blogger--plist-merge
+         (plist-get project :post-options)
+         post-options))))
     (org-jekyll-blogger--setup-blog-structure blog)
 
     (org-jekyll-blogger--update-tables-by-blog blog)
@@ -359,7 +359,7 @@
 (defun org-jekyll-blogger--update-tables-by-blog (blog)
   "Update `org-jekyll-blogger--blogs' and `org-jekyll-blogger--projects' by BLOG."
   (lexical-let ((blog-name
-                 (plist-get blog :blog-name)))
+       (plist-get blog :blog-name)))
     ;; Update project list
     (puthash
      (org-jekyll-blogger--blog-key
@@ -410,11 +410,11 @@
         (project-blogs (plist-get (cdr project-command) :components))
         (updated-project-blogs (remove command-name project-blogs)))
       (setq org-publish-project-alist
-            (remove project-command org-publish-project-alist))
+         (remove project-command org-publish-project-alist))
       (add-to-list
        'org-publish-project-alist
        (list project-name
-             :components updated-project-blogs)))))
+          :components updated-project-blogs)))))
 
 
 (defun org-jekyll-blogger--blog-command (blog)
@@ -514,7 +514,9 @@
         :base-directory (org-jekyll-blogger--blog-data-dir blog)
         :base-extension "yaml"
         :publishing-directory (org-jekyll-blogger--project-data-dir project)
-        :publishing-function 'org-publish-attachment))
+        :publishing-function 'org-publish-attachment
+        :recursive t ;; Required only to pass the check for `org-publish-file' by `string-prefix-p'
+        ))
 
     (add-to-list
      'org-publish-project-alist
@@ -572,46 +574,46 @@
 
 (defun org-jekyll-blogger-read-project ()
   (lexical-let ((active-project-names
-       (org-jekyll-blogger--get-active-project-names)))
+                 (org-jekyll-blogger--get-active-project-names)))
     (unless active-project-names
       (error "No projects with blogs defined yet"))
 
     (lexical-let* ((project-name
-         (org-jekyll-blogger--completing-read
-          "Select a project: "
-          active-project-names
-          nil
-          t))
-        (project
-         (gethash project-name org-jekyll-blogger--projects)))
+                    (org-jekyll-blogger--completing-read
+                     "Select a project: "
+                     active-project-names
+                     nil
+                     t))
+                   (project
+                    (gethash project-name org-jekyll-blogger--projects)))
       project)))
 
 (defun org-jekyll-blogger-read-project-and-blog ()
   "Select a project and blog and output it as pair."
   (lexical-let ((active-project-names
-       (org-jekyll-blogger--get-active-project-names)))
+                 (org-jekyll-blogger--get-active-project-names)))
     (unless active-project-names
       (error "No projects with blogs defined yet"))
 
     (lexical-let* ((project-name
-         (org-jekyll-blogger--completing-read
-          "Select a project: "
-          active-project-names
-          nil
-          t))
-        (project
-         (gethash project-name org-jekyll-blogger--projects))
+                    (org-jekyll-blogger--completing-read
+                     "Select a project: "
+                     active-project-names
+                     nil
+                     t))
+                   (project
+                    (gethash project-name org-jekyll-blogger--projects))
 
-        (blog-name
-         (org-jekyll-blogger--completing-read
-          "Select a blog: "
-          (org-jekyll-blogger--get-blog-names-by-project-name project-name)
-          nil
-          t))
-        (blog
-         (gethash
-          (org-jekyll-blogger--blog-key project-name blog-name)
-          org-jekyll-blogger--blogs)))
+                   (blog-name
+                    (org-jekyll-blogger--completing-read
+                     "Select a blog: "
+                     (org-jekyll-blogger--get-blog-names-by-project-name project-name)
+                     nil
+                     t))
+                   (blog
+                    (gethash
+                     (org-jekyll-blogger--blog-key project-name blog-name)
+                     org-jekyll-blogger--blogs)))
       (cons project blog))))
 
 (defun org-jekyll-blogger--read-post ()
@@ -632,22 +634,22 @@
                  (mapcar
                   (lambda (draft)
                     (cons (format "(%10s) %s" "" (car draft))
-                       (cdr draft)))
+                          (cdr draft)))
                   draft-posts)
                  (mapcar
                   (lambda (posted)
                     (cons (format "(%10s) %s" (cadr posted) (car posted))
-                       (caddr posted)))
+                          (caddr posted)))
                   posted-posts))))
     (unless posts
       (error "No posts for the blog yet"))
 
     (lexical-let* ((selected-post
-         (org-jekyll-blogger--completing-read
-          "Select a post: "
-          posts
-          nil
-          t)))
+                    (org-jekyll-blogger--completing-read
+                     "Select a post: "
+                     posts
+                     nil
+                     t)))
       selected-post)))
 
 
@@ -668,7 +670,7 @@
   (mapcar
    (lambda (post)
      (cons (file-name-base post)
-        post))
+           post))
    (org-jekyll-blogger--dir-posts
     (org-jekyll-blogger--blog-draft-dir blog))))
 
@@ -678,7 +680,7 @@
    (lambda (triple)
      (let ((file-name (caddr triple)))
        (and (backup-file-name-p file-name)
-          (auto-save-file-name-p file-name))))
+            (auto-save-file-name-p file-name))))
    (mapcar
     (lambda (post)
       (list
@@ -713,12 +715,12 @@
                 nil
                 nil)))
     (lexical-let* ((draft-dir (org-jekyll-blogger--blog-draft-dir blog))
-        (draft-file
-         (expand-file-name
-          (concat draft-name org-jekyll-blogger--post-ext)
-          draft-dir))
-        (post
-         (org-jekyll-blogger--define-post draft-name blog)))
+                   (draft-file
+                    (expand-file-name
+                     (concat draft-name org-jekyll-blogger--post-ext)
+                     draft-dir))
+                   (post
+                    (org-jekyll-blogger--define-post draft-name blog)))
       (find-file draft-file)
 
       (insert (org-jekyll-blogger--format-post-preamble post))
@@ -739,8 +741,8 @@
     (write-file new-location t))
 
   (when (and file
-           (file-exists-p new-location)
-           (not (string-equal file new-location)))
+             (file-exists-p new-location)
+             (not (string-equal file new-location)))
     (delete-file file)))
 
 (defun org-jekyll-blogger-post-draft ()
@@ -754,26 +756,26 @@
       (error "No drafts for the blog yet"))
 
     (lexical-let* ((draft-post
-         (org-jekyll-blogger--completing-read
-          "Select a draft: "
-          (mapcar
-           (lambda (post)
-             (cons (car post) post))
-           draft-posts)
-          nil
-          t))
-        (draft-name
-         (car draft-post))
-        (draft-file
-         (cdr draft-post))
-        (draft-prefix
-         (org-jekyll-blogger--post-draft-prefix))
-        (draft-file-name
-         (format "%s-%s%s" draft-prefix draft-name org-jekyll-blogger--post-ext))
-        (posted-file
-         (expand-file-name
-          draft-file-name
-          (org-jekyll-blogger--blog-post-dir blog))))
+                    (org-jekyll-blogger--completing-read
+                     "Select a draft: "
+                     (mapcar
+                      (lambda (post)
+                        (cons (car post) post))
+                      draft-posts)
+                     nil
+                     t))
+                   (draft-name
+                    (car draft-post))
+                   (draft-file
+                    (cdr draft-post))
+                   (draft-prefix
+                    (org-jekyll-blogger--post-draft-prefix))
+                   (draft-file-name
+                    (format "%s-%s%s" draft-prefix draft-name org-jekyll-blogger--post-ext))
+                   (posted-file
+                    (expand-file-name
+                     draft-file-name
+                     (org-jekyll-blogger--blog-post-dir blog))))
       (org-jekyll-blogger--move-file
        draft-file
        posted-file)
@@ -804,7 +806,7 @@
   "Publish a jekyll project."
   (interactive)
   (lexical-let* ((project (org-jekyll-blogger-read-project))
-      (project-command (org-jekyll-blogger--project-command project)))
+                 (project-command (org-jekyll-blogger--project-command project)))
     (org-publish project-command)))
 
 (defun org-jekyll-blogger-publish-blog ()
@@ -812,7 +814,7 @@
   (interactive)
 
   (lexical-let* ((project (org-jekyll-blogger-read-project))
-      (project-command (org-jekyll-blogger--project-command project)))
+                 (project-command (org-jekyll-blogger--project-command project)))
     (org-publish project-command)))
 
 (defun org-jekyll-blogger-publish-post ()
@@ -825,20 +827,21 @@
   "Cleanout a BLOG's site draft directory."
   (interactive)
   (lexical-let* ((the-blog
-       (or blog
-          (cdr (org-jekyll-blogger-read-project-and-blog))))
-      (publish-root
-       (plist-get the-blog :blog-publish-root))
-      (site-draft-dir
-       (expand-file-name
-        org-jekyll-blogger--drafts-dir-name
-        publish-root)))
-    (mapc
-     (lambda (file-name)
-       (unless (or (string= "." file-name) (string= ".." file-name))
-         (delete-file (expand-file-name file-name site-draft-dir) t)))
-     (directory-files site-draft-dir))
-
+                  (or blog
+                      (cdr (org-jekyll-blogger-read-project-and-blog))))
+                 (publish-root
+                  (plist-get the-blog :blog-publish-root))
+                 (site-draft-dir
+                  (expand-file-name
+                   org-jekyll-blogger--drafts-dir-name
+                   publish-root)))
+    (if (not (file-exists-p site-draft-dir))
+        (message "%s does not exist so doing nothing." site-draft-dir)
+      (mapc
+       (lambda (file-name)
+         (unless (or (string= "." file-name) (string= ".." file-name))
+           (delete-file (expand-file-name file-name site-draft-dir) t)))
+       (directory-files site-draft-dir)))
     (message "%s cleaned." site-draft-dir)))
 
 
